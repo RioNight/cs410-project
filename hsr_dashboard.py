@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +9,7 @@ import plotly.graph_objects as go
 from wordcloud import WordCloud
 import os
 
-st.set_page_config(page_title="HSR Sentiment Dashboard", layout="wide", page_icon="⭐")
+st.set_page_config(page_title="HSR Sentiment Dashboard", layout="wide", page_icon="images/matrix.ico")
 
 # Custom CSS
 st.markdown("""
@@ -72,8 +73,21 @@ if df is None:
     st.stop()
 
 # Header
-st.markdown('<p class="main-header">⭐ Honkai: Star Rail Sentiment Dashboard</p>', unsafe_allow_html=True)
-st.markdown("---")
+def get_base64_image(image_path):
+    with open(image_path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+# Then use it:
+img_base64 = get_base64_image("images/matrix.png")
+st.markdown(
+    f"""
+    <p class="main-header">
+        <img src="data:image/png;base64,{img_base64}" width="60" style="vertical-align: middle; margin-right: 8px;">
+        Honkai: Star Rail Sentiment Dashboard
+    </p>
+    """,
+    unsafe_allow_html=True
+)
 
 # Version metadata with banner images
 # Using direct imgur links (more reliable than Wikia for hotlinking)
