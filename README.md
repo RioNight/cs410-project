@@ -45,13 +45,33 @@ This project implements a complete sentiment analysis pipeline for analyzing 49,
 
 ### Obtaining the Dataset
 
-<!-- USER: Add your dataset acquisition instructions here -->
-<!-- Include:
-- Where to download the dataset
-- Any data collection methods used
-- Required file format and naming
-- Expected location in project directory
--->
+The dataset consists of Google Play Store reviews for Honkai: Star Rail, collected using the `google-play-scraper` library.
+
+#### Option 1: Automated Collection (Recommended)
+
+**Step 1: Install Scraper Library**
+```bash
+pip install google-play-scraper
+```
+
+**Step 2: Run Collection Script**
+```bash
+python collect_reviews.py
+```
+
+This will:
+- Connect to Google Play Store
+- Fetch all available reviews for Honkai: Star Rail
+- Process and clean the data
+- Save to `reviews.csv` in the project root
+
+**Expected Runtime:** 5-15 minutes depending on review count and internet speed
+
+**Output:** `reviews.csv` with 40,000-50,000+ reviews
+
+#### Option 2: Use Pre-collected Dataset
+
+If you have a pre-collected `reviews.csv` file, place it in the project root directory.
 
 **Required File:** `reviews.csv`
 
@@ -70,6 +90,41 @@ This project implements a complete sentiment analysis pipeline for analyzing 49,
 - `source`: Platform (Google Play)
 - `language_code`: Language code
 - `country_code`: Country code
+
+### Data Collection Details
+
+**Script:** `collect_reviews.py`
+
+**Source:** Google Play Store API via `google-play-scraper`
+
+**App ID:** `com.HoYoverse.hkrpgoversea` (Honkai: Star Rail)
+
+**Collection Method:**
+- Uses unofficial Google Play Store scraper
+- Fetches all publicly available reviews
+- No authentication required
+- Respects rate limits
+
+**Data Freshness:**
+- Reviews are collected at runtime
+- Includes reviews from game launch (April 2023) to present
+- Re-run script periodically to get latest reviews
+
+**Important Notes:**
+- Google Play may rate-limit requests (wait and retry if needed)
+- Review count varies over time as new reviews are posted
+- Script automatically handles pagination
+- Collected data is saved locally (not uploaded to any server)
+
+**Troubleshooting Collection:**
+```bash
+# If script fails, try:
+pip install --upgrade google-play-scraper
+
+# Check app ID is correct
+# Verify internet connection
+# Wait 5 minutes and retry if rate-limited
+```
 
 ---
 
@@ -112,6 +167,20 @@ python -c "import transformers, torch, streamlit; print('All dependencies instal
 ---
 
 ## Quick Start
+
+### Step 0: Collect Data (First Time Only)
+
+If you don't have `reviews.csv`, collect it first:
+
+```bash
+# Install scraper
+pip install google-play-scraper
+
+# Run collection script
+python collect_reviews.py
+```
+
+**Wait 5-15 minutes** for data collection to complete.
 
 ### Option 1: Run Complete Analysis (Recommended for First Time)
 
@@ -544,6 +613,7 @@ reviews_with_versions.csv
 ```
 cs410-project/
 ├── README.md                                # This file
+├── collect_reviews.py                       # Data collection script
 ├── hsr_sentiment_analysis.ipynb            # Main analysis notebook
 ├── hsr_dashboard.py                         # Streamlit dashboard
 │
