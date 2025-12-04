@@ -11,24 +11,49 @@ import os
 
 st.set_page_config(page_title="HSR Sentiment Dashboard", layout="wide", page_icon="images/matrix.ico")
 
+# Load custom font
+def load_custom_font():
+    with open("css/PF Din Text Universal Medium.ttf", "rb") as f:
+        font_data = base64.b64encode(f.read()).decode()
+    return font_data
+
+font_base64 = load_custom_font()
+
 # Custom CSS
-st.markdown("""
+st.markdown(f"""
 <style>
-    .main-header {
+    @font-face {{
+        font-family: 'PF Din Text';
+        src: url(data:font/truetype;charset=utf-8;base64,{font_base64}) format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }}
+
+    .main-header {{
+        font-family: 'PF Din Text', sans-serif !important;
         font-size: 48px !important;
         font-weight: bold;
         color: #2c3e50;
         text-align: center;
         margin-bottom: 2rem;
         line-height: 1.2;
-    }
-    .metric-card {
+    }}
+    .metric-card {{
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 20px;
         border-radius: 10px;
         color: white;
         text-align: center;
-    }
+    }}
+
+    /* Apply custom font to other elements */
+    h1, h2, h3, h4, h5, h6 {{
+        font-family: 'PF Din Text', sans-serif !important;
+    }}
+
+    .stMetric {{
+        font-family: 'PF Din Text', sans-serif !important;
+    }}
 </style>
 """, unsafe_allow_html=True)
 
