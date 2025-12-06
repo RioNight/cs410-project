@@ -525,7 +525,12 @@ with tab4:
     st.write("Search reviews using natural language queries")
 
     query = st.text_input("Enter your search query:", placeholder="e.g., character design, gacha rates, story")
-    num_results = st.slider("Number of results:", 1, 20, 5)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        num_results = st.slider("Number of results:", 1, 20, 5)
+    with col2:
+        min_length = st.slider("Minimum review length (characters):", 0, 1000, 0, step=50)
 
     if query:
         try:
@@ -561,6 +566,10 @@ with tab4:
                 (results['rating'] <= rating_filter[1])
             ]
 
+            # Filter by minimum review length
+            if min_length > 0:
+                results = results[results['review_description'].str.len() >= min_length]
+
             if len(results) > 0:
                 st.success(f"Found {len(results)} results with avg similarity: {results['similarity'].mean():.3f}")
             else:
@@ -570,8 +579,9 @@ with tab4:
             for idx, row in results.iterrows():
                 similarity_color = "🟢" if row['similarity'] > 0.7 else "🟡" if row['similarity'] > 0.5 else "🔴"
                 sentiment_emoji = "😊" if row['sentiment'] == 'POSITIVE' else "😞"
+                review_length = len(row['review_description'])
 
-                with st.expander(f"{similarity_color} Similarity: {row['similarity']:.3f} | ⭐ {row['rating']}/5 {sentiment_emoji}"):
+                with st.expander(f"{similarity_color} Similarity: {row['similarity']:.3f} | ⭐ {row['rating']}/5 {sentiment_emoji} | 📝 {review_length} chars"):
                     st.write(row['review_description'])
                     st.caption(f"Version: {row['version']} | Date: {row['review_date']}")
 
